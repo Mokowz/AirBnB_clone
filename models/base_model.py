@@ -22,8 +22,6 @@ class BaseModel:
                 else:
                     self.__dict__[key] = value
 
-
-
     def __str__(self):
         """String representation of base model"""
         str = '['
