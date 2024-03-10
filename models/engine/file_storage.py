@@ -33,3 +33,7 @@ class FileStorage:
     def save(self):
         """serialize the __object"""
         json.dump(self.__objects, self.__file_path)
+
+    def reload(self):
+        """deserialize the json file"""
+        pass
