@@ -2,6 +2,13 @@
 """Initalize the console"""
 import cmd
 from models import storage
+import shlex
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
@@ -58,7 +65,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, arg):
         """Destory a class instance"""
-        args = parse(arg)
+        args = arg.split()
         objdict = storage.all()
         if not args:
             print("** class name missing **")
@@ -71,7 +78,54 @@ class HBNBCommand(cmd.Cmd):
         else:
             del objdict["{}.{}".format(args[0], args[1])]
             storage.save()
+    
+    def do_all(self, arg):
+        """Prints all string representation of all instances based or not
+        on the class name.
+        """
+        args = arg.split()
+        all_objects = storage.all()
+        lst = []
+        if len(args) == 0:
+            # print all classes
+            for value in all_objects.values():
+                lst.append(str(value))
+        elif args[0] in self.classes_list:
+            # print just arg[0] class instances
+            for (key, value) in all_objects.items():
+                if args[0] in key:
+                    lst.append(str(value))
+        else:
+            print("** class doesn't exist **")
+            return False
+        print(lst)
 
+    def do_update(self, line):
+        """ Updates an instance based on the class name
+        """
+        act = ""
+        for argv in line.split(','):
+            act = act + argv
+        args = shlex.split(act)
+        if not self.class_verification(args):
+            return
+        if not self.id_verification(args):
+            return
+        if not self.attribute_verification(args):
+            return
+        all_objects = storage.all()
+        for key, value in all_objects.items():
+            object_name = value.__class__.__name__
+            object_id = value.id
+            if object_name == args[0] and object_id == args[1].strip('"'):
+                if len(args) == 2:
+                    print("** attribute name missing **")
+                elif len(args) == 3:
+                    print("** value missing **")
+                else:
+                    setattr(value, args[2], args[3])
+                    storage.save()
+                return
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
