@@ -37,39 +37,39 @@ class HBNBCommand(cmd.Cmd):
         elif args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist")
         else:
-            print(eval(argv[0])().id)
+            print(eval(args[0])().id)
             storage.save()
 
     def do_show(self, arg):
         """Display the string representation of a class instance of a given id.
         """
-        argv = parse(arg)
+        args = arg.split()
         objdict = storage.all()
-        if not argv:
+        if not args:
             print("** class name missing **")
-        elif argv[0] not in HBNBCommand.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
-        elif len(argv) == 1:
+        elif len(args) == 1:
             print("** instance id missing **")
-        elif "{}.{}".format(argv[0], argv[1]) not in objdict:
+        elif "{}.{}".format(args[0], args[1]) not in objdict:
             print("** no instance found **")
         else:
-            print(objdict["{}.{}".format(argv[0], argv[1])])
+            print(objdict["{}.{}".format(args[0], args[1])])
 
     def do_destroy(self, arg):
         """Destory a class instance"""
-        argv = parse(arg)
+        args = parse(arg)
         objdict = storage.all()
-        if not argv:
+        if not args:
             print("** class name missing **")
-        elif argv[0] not in HBNBCommand.__classes:
+        elif args[0] not in HBNBCommand.__classes:
             print("** class doesn't exist **")
-        elif len(argv) == 1:
+        elif len(args) == 1:
             print("** instance id missing **")
-        elif "{}.{}".format(argv[0], argv[1]) not in objdict.keys():
+        elif "{}.{}".format(args[0], args[1]) not in objdict.keys():
             print("** no instance found **")
         else:
-            del objdict["{}.{}".format(argv[0], argv[1])]
+            del objdict["{}.{}".format(args[0], args[1])]
             storage.save()
 
 
